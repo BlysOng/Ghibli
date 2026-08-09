@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Ghibli — Where Magic Lives</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sky-blue: #5bbce4;
+    --deep-sky: #2e8fc2;
+    --ocean: #1a6fa0;
+    --cream: #fef9f0;
+    --warm-white: #fffdf5;
+    --ghibli-green: #4a7c3f;
+    --train-green: #3d7a4a;
+    --gold: #c9973a;
+    --rust: #b84c2c;
+    --cloud-white: rgba(255,255,255,0.9);
+    --text-dark: #2c2014;
+    --text-mid: #5a3e28;
+    --shadow-soft: 0 4px 24px rgba(44,32,20,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    background: linear-gradient(to bottom, rgba(30,80,120,0.82), rgba(30,80,120,0));
+    backdrop-filter: blur(2px);
+    transition: background 0.4s;
+  }
+  nav.scrolled {
+    background: linear-gradient(to bottom, rgba(20,55,90,0.97), rgba(20,55,90,0.95));
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  }
+  .nav-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.15rem;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: #f7d97a; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.92);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0; right: 0;
+    height: 1px;
+    background: #f7d97a;
+    transform: scaleX(0);
+    transition: transform 0.25s;
+  }
+  .nav-links a:hover { color: #f7d97a; }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-signup {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.85rem;
+    color: var(--text-dark) !important;
+    background: linear-gradient(135deg, #f7d97a, #e8c450);
+    padding: 8px 22px;
+    border-radius: 24px;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    box-shadow: 0 2px 10px rgba(200,150,30,0.35);
+    transition: transform 0.2s, box-shadow 0.2s !important;
+  }
+  .nav-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(200,150,30,0.5) !important;
+    color: var(--text-dark) !important;
+  }
+  .nav-signup::after { display: none !important; }
+
+  /* ─── HERO SECTION ─── */
+  #home {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sky gradient layers */
+  .hero-sky {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      #4ab8e8 0%,
+      #6dcaef 30%,
+      #a4ddf5 55%,
+      #c8eef8 70%,
+      #d9f0f7 80%,
+      #e8f6f9 88%,
+      #f0f8f5 100%
+    );
+  }
+
+  /* Animated clouds */
+  .clouds-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.85);
+    border-radius: 50px;
+    filter: blur(6px);
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .cloud-1 { width:280px; height:70px; top:12%; left:-10%; animation: driftCloud 40s linear infinite; }
+  .cloud-1::before { width:120px; height:90px; top:-35px; left:50px; }
+  .cloud-1::after  { width:80px;  height:60px; top:-20px; left:130px; }
+  .cloud-2 { width:200px; height:55px; top:22%; left:-5%; animation: driftCloud 55s linear infinite 8s; opacity:0.75; }
+  .cloud-2::before { width:90px;  height:70px; top:-30px; left:30px; }
+  .cloud-2::after  { width:60px;  height:45px; top:-15px; left:100px; }
+  .cloud-3 { width:340px; height:80px; top:8%;  left:-15%; animation: driftCloud 48s linear infinite 18s; opacity:0.6; }
+  .cloud-3::before { width:140px; height:100px; top:-40px; left:60px; }
+  .cloud-3::after  { width:100px; height:70px;  top:-25px; left:170px; }
+  .cloud-4 { width:160px; height:45px; top:35%; left:-8%; animation: driftCloud 62s linear infinite 4s; opacity:0.5; }
+  @keyframes driftCloud { from { transform: translateX(0); } to { transform: translateX(120vw); } }
+
+  /* Background image */
+  .hero-bg-img {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 70%;
+    background: url('/mnt/user-data/uploads/BACKGROUND_WEBSITE.jpg') center bottom / cover no-repeat;
+    pointer-events: none;
+  }
+
+  /* Ocean shimmer overlay */
+  .ocean-shimmer {
+    position: absolute;
+    bottom: 20%;
+    left: 0; right: 0;
+    height: 25%;
+    background: linear-gradient(180deg, transparent 0%, rgba(91,188,228,0.08) 50%, transparent 100%);
+    animation: shimmer 4s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* Platform ground */
+  .hero-ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 12%;
+    background: linear-gradient(180deg, #c8bfa8 0%, #b8af98 60%, #a8a090 100%);
+  }
+  .hero-ground::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  }
+
+  /* ─── TRAIN ─── */
+  .train-wrapper {
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    pointer-events: none;
+    will-change: transform;
+    transition: transform 0.05s linear;
+  }
+  .train-svg-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-55%);
+    width: 560px;
+    height: 180px;
+    filter: drop-shadow(4px 8px 16px rgba(0,0,0,0.3));
+  }
+
+  /* ─── HERO CONTENT ─── */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 0 24px;
+    margin-top: -15vh;
+  }
+  .hero-eyebrow {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.15em;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    color: #fff;
+    text-shadow: 0 2px 20px rgba(0,60,120,0.5), 0 0 40px rgba(255,255,255,0.2);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: #f7d97a; }
+  .hero-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.88);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-dark);
+    background: linear-gradient(135deg, #f7d97a, #e4b83a);
+    padding: 14px 36px;
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(200,150,30,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(200,150,30,0.55);
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    animation: floatHint 2.5s ease-in-out infinite;
+  }
+  .scroll-hint svg { opacity: 0.8; }
+  @keyframes floatHint { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ─── SECTION DIVIDER ─── */
+  .section-divider {
+    position: relative;
+    height: 80px;
+    background: linear-gradient(180deg, #e8f6f9 0%, var(--cream) 100%);
+    overflow: hidden;
+  }
+  .section-divider svg { position: absolute; bottom: 0; width: 100%; }
+
+  /* ─── MOVIES SECTION ─── */
+  #movies {
+    background: linear-gradient(180deg, var(--cream) 0%, #f5efe0 40%, #ede3d0 100%);
+    padding: 80px 48px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  #movies::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9973a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .section-eyebrow {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    color: var(--text-dark);
+    margin-bottom: 14px;
+    line-height: 1.25;
+  }
+  .section-title span { color: var(--ghibli-green); }
+  .section-desc {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.1rem;
+    color: var(--text-mid);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .title-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 16px 0 0;
+    color: var(--gold);
+    font-size: 1.1rem;
+  }
+  .title-ornament::before, .title-ornament::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .title-ornament::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+  /* ─── MOVIE GRID ─── */
+  .movies-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: end;
+  }
+  .movie-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.5s ease, flex 0.5s ease;
+    box-shadow: 0 4px 20px rgba(44,32,20,0.18);
+    transform-origin: bottom center;
+    border: 2px solid transparent;
+  }
+  .movie-card.active {
+    transform: scale(1.12) translateY(-14px);
+    box-shadow: 0 16px 48px rgba(44,32,20,0.35), 0 0 0 3px var(--gold);
+    z-index: 5;
+    border-color: var(--gold);
+  }
+  .movie-card:hover:not(.active) {
+    transform: scale(1.06) translateY(-8px);
+    box-shadow: 0 10px 32px rgba(44,32,20,0.28);
+    z-index: 4;
+    border-color: rgba(201,151,58,0.5);
+  }
+  .movie-poster {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    pointer-events: none;
+    transition: filter 0.4s;
+  }
+  .movie-card:hover .movie-poster,
+  .movie-card.active .movie-poster { filter: brightness(1.05) saturate(1.1); }
+
+  /* Poster color blocks (no real images) */
+  .poster-art {
+    width: 100%;
+    aspect-ratio: 2/3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .poster-art-1 { background: linear-gradient(160deg, #1a3a5c 0%, #2e6fa3 35%, #4a9fd4 60%, #2d7a5f 80%, #1e5240 100%); }
+  .poster-art-2 { background: linear-gradient(160deg, #0d1b2a 0%, #1a3850 30%, #2d6080 55%, #5a9080 75%, #3d7060 100%); }
+  .poster-art-3 { background: linear-gradient(160deg, #1a0a2e 0%, #3d1a5c 30%, #7a3a8c 55%, #c4507a 75%, #e87040 100%); }
+  .poster-art-4 { background: linear-gradient(160deg, #0a1a0a 0%, #1a3520 30%, #2d5e38 55%, #4a8c50 75%, #8ab870 100%); }
+
+  /* Poster illustrations */
+  .poster-illustration {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  /* Spirited Away — bathhouse silhouette */
+  .pi-1::before {
+    content: '';
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 55%;
+    background: rgba(0,0,0,0.5);
+    clip-path: polygon(20% 100%, 20% 30%, 25% 25%, 35% 15%, 50% 5%, 65% 15%, 75% 25%, 80% 30%, 80% 100%);
+    filter: blur(1px);
+  }
+  .pi-1::after {
+    content: '✦';
+    position: absolute;
+    top: 15%;
+    right: 20%;
+    font-size: 2rem;
+    color: rgba(255,220,100,0.7);
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  /* Moving Castle — castle silhouette */
+  .pi-2::before {
+    content: '';
+    position: absolute;
+    bottom: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    height: 45%;
+    background: rgba(20,40,80,0.7);
+    clip-path: polygon(0 100%, 5% 60%, 15% 50%, 10% 30%, 20% 20%, 30% 30%, 28% 50%, 40% 45%, 50% 20%, 60% 45%, 72% 50%, 70% 30%, 80% 20%, 90% 30%, 85% 50%, 95% 60%, 100% 100%);
+  }
+  /* Princess Mononoke — forest */
+  .pi-3::before {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    width: 80%;
+    height: 55%;
+    background: linear-gradient(180deg, transparent 0%, rgba(10,40,10,0.8) 100%);
+    clip-path: polygon(0 100%, 5% 50%, 15% 65%, 20% 30%, 30% 55%, 40% 20%, 50% 50%, 60% 25%, 70% 55%, 80% 35%, 90% 60%, 95% 45%, 100% 100%);
+  }
+  /* My Neighbor Totoro — tree */
+  .pi-4::before {
+    content: '';
+    position: absolute;
+    bottom: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 65%;
+    background: rgba(10,50,20,0.85);
+    clip-path: polygon(50% 0%, 0% 60%, 25% 55%, 10% 80%, 35% 72%, 25% 100%, 75% 100%, 65% 72%, 90% 80%, 75% 55%, 100% 60%);
+  }
+  @keyframes twinkle { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+  .movie-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 16px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+    text-align: center;
+    transform: translateY(4px);
+    transition: transform 0.3s;
+  }
+  .movie-card:hover .movie-overlay,
+  .movie-card.active .movie-overlay { transform: translateY(0); }
+  .movie-year {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 4px;
+  }
+  .movie-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.82rem;
+    color: #fff;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .movie-stars {
+    color: #f7d97a;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .watch-btn {
+    display: inline-block;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-dark);
+    background: linear-gradient(135deg, #f7d97a, #e4b83a);
+    border: none;
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(200,150,30,0.4);
+  }
+  .watch-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(200,150,30,0.55);
+  }
+  .active-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--gold);
+    color: var(--text-dark);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .movie-card.active .active-badge { opacity: 1; transform: scale(1); }
+
+  /* ─── FOOTER AREA ─── */
+  .movies-footer {
+    text-align: center;
+    margin-top: 56px;
+    position: relative;
+  }
+  .movies-footer-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .footer-ornament { color: var(--gold); font-size: 1.2rem; }
+  .footer-text {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text-mid);
+  }
+  .footer-hr {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border: none;
+    margin: 0 auto 20px;
+  }
+  .copyright {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.75rem;
+    color: rgba(90,62,40,0.5);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── SIGN UP MODAL ─── */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(10,30,60,0.72);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeInBackdrop 0.3s ease;
+  }
+  .modal-backdrop.open { display: flex; }
+  @keyframes fadeInBackdrop { from{opacity:0} to{opacity:1} }
+
+  .modal {
+    position: relative;
+    background: linear-gradient(145deg, #fef8ec 0%, #fdf4e0 40%, #f8edd6 100%);
+    border-radius: 24px;
+    padding: 56px 48px 48px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 24px 80px rgba(10,30,60,0.45), 0 0 0 1px rgba(201,151,58,0.25);
+    animation: slideUpModal 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    overflow: hidden;
+  }
+  @keyframes slideUpModal { from{transform:translateY(40px) scale(0.95);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #4a7c3f, #c9973a, #4a7c3f);
+  }
+  /* Decorative corner elements */
+  .modal-corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    opacity: 0.15;
+  }
+  .modal-corner-tl { top: 12px; left: 12px; }
+  .modal-corner-tr { top: 12px; right: 12px; transform: scaleX(-1); }
+  .modal-corner-bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+  .modal-corner-br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--text-mid);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 2;
+  }
+  .modal-close:hover { color: var(--rust); transform: rotate(90deg); }
+
+  .modal-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #e8f4ea, #c8e8cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    box-shadow: 0 4px 16px rgba(74,124,63,0.2);
+    border: 2px solid rgba(74,124,63,0.2);
+  }
+  .modal-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .modal-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-mid);
+    text-align: center;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    letter-spacing: 0.08em;
+  }
+  .form-input {
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: var(--text-dark);
+    background: rgba(255,255,255,0.8);
+    border: 1.5px solid rgba(201,151,58,0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    width: 100%;
+  }
+  .form-input:focus {
+    border-color: var(--ghibli-green);
+    box-shadow: 0 0 0 3px rgba(74,124,63,0.12);
+    background: #fff;
+  }
+  .form-input::placeholder { color: rgba(90,62,40,0.4); }
+
+  .modal-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--gold);
+    font-size: 0.85rem;
+  }
+  .modal-divider::before, .modal-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,151,58,0.4));
+  }
+  .modal-divider::after { background: linear-gradient(90deg, rgba(201,151,58,0.4), transparent); }
+
+  .signup-btn {
+    width: 100%;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    background: linear-gradient(135deg, #f7d97a 0%, #e4b83a 50%, #d4a020 100%);
+    border: none;
+    padding: 14px 24px;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(200,150,30,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .signup-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  .signup-btn:hover::before { left: 150%; }
+  .signup-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(200,150,30,0.5);
+  }
+  .signup-btn:active { transform: translateY(0); }
+
+  .modal-note {
+    font-family: 'Crimson Text', serif;
+    font-size: 0.82rem;
+    color: rgba(90,62,40,0.5);
+    text-align: center;
+    margin-top: 14px;
+    font-style: italic;
+  }
+
+  /* ─── SUCCESS STATE ─── */
+  .modal-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success-anim {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+  .success-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.3rem;
+    color: var(--ghibli-green);
+    margin-bottom: 10px;
+  }
+  .success-text {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    color: var(--text-mid);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .movies-grid { grid-template-columns: repeat(2, 1fr); }
+    #movies { padding: 60px 20px 80px; }
+    .modal { padding: 44px 28px 36px; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-title { font-size: 1.9rem; }
+    .train-svg-container { width: 380px; left: 45%; }
+  }
+
+  /* Decorative leaves / dust motes */
+  .dust-mote {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    pointer-events: none;
+    animation: floatDust linear infinite;
+  }
+  @keyframes floatDust {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(-120px) translateX(40px) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">Studio <span>Ghibli</span></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#movies">Movies</a></li>
+    <li><a href="#" class="nav-signup" onclick="openModal(event)">Sign Up</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HOME SECTION ─── -->
+<section id="home">
+  <div class="hero-sky"></div>
+
+  <!-- Animated clouds -->
+  <div class="clouds-layer">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4"></div>
+  </div>
+
+  <!-- Background image (ocean + station) -->
+  <div class="hero-bg-img" id="heroBg"></div>
+  <div class="ocean-shimmer"></div>
+
+  <!-- Ground platform -->
+  <div class="hero-ground"></div>
+
+  <!-- THE TRAIN — main star -->
+  <div class="train-wrapper" id="trainWrapper">
+    <div class="train-svg-container">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <!-- Train body -->
+        <rect x="10" y="60" width="520" height="95" rx="14" fill="#3d7a4a"/>
+        <rect x="10" y="60" width="520" height="20" rx="8" fill="#2d6038"/>
+        <!-- Cream stripe -->
+        <rect x="10" y="78" width="520" height="38" rx="0" fill="#f0ebd8"/>
+        <!-- Upper body -->
+        <rect x="22" y="38" width="498" height="42" rx="12" fill="#f0ebd8"/>
+        <rect x="22" y="38" width="498" height="12" rx="6" fill="#e8e0c8"/>
+        <!-- Roof details -->
+        <rect x="60" y="28" width="420" height="14" rx="6" fill="#d8d0b8"/>
+        <rect x="90" y="20" width="360" height="12" rx="5" fill="#ccc4b0"/>
+        <!-- AC units on roof -->
+        <rect x="110" y="12" width="80" height="14" rx="4" fill="#b8b0a0"/>
+        <rect x="280" y="12" width="80" height="14" rx="4" fill="#b8b0a0"/>
+        <rect x="370" y="12" width="80" height="14" rx="4" fill="#b8b0a0"/>
+        <!-- Front cab -->
+        <path d="M10 60 Q 8 60 6 65 L 6 130 Q 6 140 14 140 L 22 140 L 22 60 Z" fill="#2d6038"/>
+        <!-- Front windshield -->
+        <rect x="14" y="68" width="16" height="40" rx="4" fill="#b8ddf0" opacity="0.8"/>
+        <!-- Headlight front -->
+        <circle cx="12" cy="118" r="6" fill="#f7d97a" opacity="0.9"/>
+        <circle cx="12" cy="118" r="3" fill="#fff"/>
+        <!-- Windows row -->
+        <rect x="50"  y="42" width="52" height="32" rx="6" fill="#c0ddf0" opacity="0.85"/>
+        <rect x="120" y="42" width="52" height="32" rx="6" fill="#b8d8ee" opacity="0.85"/>
+        <rect x="190" y="42" width="52" height="32" rx="6" fill="#c4e0f4" opacity="0.85"/>
+        <rect x="260" y="42" width="52" height="32" rx="6" fill="#b8d8ee" opacity="0.85"/>
+        <rect x="330" y="42" width="52" height="32" rx="6" fill="#c0ddf0" opacity="0.85"/>
+        <rect x="400" y="42" width="52" height="32" rx="6" fill="#b8d8ee" opacity="0.85"/>
+        <rect x="470" y="42" width="46" height="32" rx="6" fill="#c0ddf0" opacity="0.85"/>
+        <!-- Window frames -->
+        <rect x="50"  y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="120" y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="190" y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="260" y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="330" y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="400" y="42" width="52" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <rect x="470" y="42" width="46" height="32" rx="6" stroke="#8aaa8a" stroke-width="2" fill="none"/>
+        <!-- Passengers in windows (silhouettes) -->
+        <ellipse cx="76"  cy="56" rx="8" ry="9" fill="#a08060" opacity="0.5"/>
+        <ellipse cx="200" cy="54" rx="8" ry="9" fill="#806050" opacity="0.5"/>
+        <ellipse cx="275" cy="58" rx="7" ry="8" fill="#a08070" opacity="0.5"/>
+        <ellipse cx="420" cy="54" rx="8" ry="9" fill="#906060" opacity="0.5"/>
+        <!-- Green stripe bottom -->
+        <rect x="10" y="138" width="520" height="10" rx="0" fill="#2d6038"/>
+        <!-- Undercarriage -->
+        <rect x="10" y="148" width="520" height="12" rx="3" fill="#1e4028"/>
+        <!-- Bogies (wheel assemblies) -->
+        <rect x="42" y="152" width="95" height="22" rx="6" fill="#1a2818"/>
+        <rect x="200" y="152" width="95" height="22" rx="6" fill="#1a2818"/>
+        <rect x="360" y="152" width="95" height="22" rx="6" fill="#1a2818"/>
+        <rect x="430" y="152" width="95" height="22" rx="6" fill="#1a2818"/>
+        <!-- Wheels -->
+        <circle cx="62"  cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="62"  cy="163" r="6"  fill="#444"/>
+        <circle cx="62"  cy="163" r="2"  fill="#888"/>
+        <circle cx="112" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="112" cy="163" r="6"  fill="#444"/>
+        <circle cx="112" cy="163" r="2"  fill="#888"/>
+        <circle cx="220" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="220" cy="163" r="6"  fill="#444"/>
+        <circle cx="220" cy="163" r="2"  fill="#888"/>
+        <circle cx="270" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="270" cy="163" r="6"  fill="#444"/>
+        <circle cx="270" cy="163" r="2"  fill="#888"/>
+        <circle cx="380" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="380" cy="163" r="6"  fill="#444"/>
+        <circle cx="380" cy="163" r="2"  fill="#888"/>
+        <circle cx="430" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="430" cy="163" r="6"  fill="#444"/>
+        <circle cx="430" cy="163" r="2"  fill="#888"/>
+        <circle cx="480" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="480" cy="163" r="6"  fill="#444"/>
+        <circle cx="480" cy="163" r="2"  fill="#888"/>
+        <circle cx="505" cy="163" r="13" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+        <circle cx="505" cy="163" r="6"  fill="#444"/>
+        <circle cx="505" cy="163" r="2"  fill="#888"/>
+        <!-- Door lines -->
+        <line x1="175" y1="78" x2="175" y2="148" stroke="#4a6a4a" stroke-width="2.5" opacity="0.6"/>
+        <line x1="340" y1="78" x2="340" y2="148" stroke="#4a6a4a" stroke-width="2.5" opacity="0.6"/>
+        <!-- Door handles -->
+        <rect x="168" y="112" width="8" height="3" rx="1.5" fill="#8a6a3a"/>
+        <rect x="333" y="112" width="8" height="3" rx="1.5" fill="#8a6a3a"/>
+        <!-- Logo on train -->
+        <rect x="220" y="108" width="80" height="22" rx="4" fill="rgba(0,0,0,0.15)"/>
+        <text x="260" y="123" text-anchor="middle" font-size="11" fill="#e8d0a0" font-family="serif" font-weight="bold">GHIBLI</text>
+        <!-- Overhead wires connection -->
+        <line x1="80" y1="0" x2="80" y2="28" stroke="#888" stroke-width="1.5"/>
+        <line x1="300" y1="0" x2="300" y2="28" stroke="#888" stroke-width="1.5"/>
+        <line x1="480" y1="0" x2="480" y2="28" stroke="#888" stroke-width="1.5"/>
+        <!-- Rail tracks -->
+        <line x1="0" y1="176" x2="560" y2="176" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="178" x2="560" y2="178" stroke="#666" stroke-width="2" stroke-linecap="round"/>
+        <!-- Rail ties -->
+        <rect x="30"  y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="80"  y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="130" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="180" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="230" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="280" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="330" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="380" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="430" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <rect x="480" y="174" width="18" height="6" rx="1" fill="#8a7060" opacity="0.7"/>
+        <!-- Steam/exhaust particles (animated via JS) -->
+      </svg>
+    </div>
+    <!-- Dust particles -->
+    <div id="trainDust"></div>
+  </div>
+
+  <!-- Hero text content -->
+  <div class="hero-content">
+    <p class="hero-eyebrow">✦ A world of wonder awaits ✦</p>
+    <h1 class="hero-title">Where Every Journey<br>Becomes <span>Magic</span></h1>
+    <p class="hero-subtitle">Step into the enchanted worlds of Studio Ghibli — where nature breathes, spirits roam, and every frame holds a memory.</p>
+    <button class="hero-cta" onclick="document.getElementById('movies').scrollIntoView({behavior:'smooth'})">
+      ✦ Explore Films
+    </button>
+  </div>
+
+  <div class="scroll-hint">
+    <svg width="18" height="28" viewBox="0 0 18 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="16" height="22" rx="8" stroke="white" stroke-width="1.5"/>
+      <circle cx="9" cy="7" r="2" fill="white" opacity="0.8">
+        <animate attributeName="cy" values="7;15;7" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+    SCROLL
+  </div>
+</section>
+
+<!-- Section transition -->
+<div class="section-divider">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="var(--cream)">
+    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"/>
+  </svg>
+</div>
+
+<!-- ─── MOVIES SECTION ─── -->
+<section id="movies">
+  <div class="section-header">
+    <p class="section-eyebrow">✦ The Archive ✦</p>
+    <h2 class="section-title">Beloved <span>Ghibli</span> Films</h2>
+    <div class="title-ornament">✦</div>
+    <p class="section-desc">Timeless stories that have moved generations — each one a window into a world beyond imagination.</p>
+  </div>
+
+  <div class="movies-grid" id="moviesGrid">
+    <!-- Card 1: Spirited Away -->
+    <div class="movie-card active" data-movie="Spirited Away" onclick="handleMovieClick(this)">
+      <div class="poster-art poster-art-1">
+        <div class="poster-illustration pi-1"></div>
+      </div>
+      <span class="active-badge">✦ Featured</span>
+      <div class="movie-overlay">
+        <p class="movie-year">2001</p>
+        <h3 class="movie-title">Spirited Away</h3>
+        <div class="movie-stars">★★★★★</div>
+        <button class="watch-btn" onclick="watchMovie(event, 'Spirited Away')">Watch Film</button>
+      </div>
+    </div>
+
+    <!-- Card 2: Howl's Moving Castle -->
+    <div class="movie-card" data-movie="Howl's Moving Castle" onclick="handleMovieClick(this)">
+      <div class="poster-art poster-art-2">
+        <div class="poster-illustration pi-2"></div>
+      </div>
+      <span class="active-badge">✦ Featured</span>
+      <div class="movie-overlay">
+        <p class="movie-year">2004</p>
+        <h3 class="movie-title">Howl's Moving Castle</h3>
+        <div class="movie-stars">★★★★★</div>
+        <button class="watch-btn" onclick="watchMovie(event, 'Howl\'s Moving Castle')">Watch Film</button>
+      </div>
+    </div>
+
+    <!-- Card 3: Princess Mononoke -->
+    <div class="movie-card" data-movie="Princess Mononoke" onclick="handleMovieClick(this)">
+      <div class="poster-art poster-art-3">
+        <div class="poster-illustration pi-3"></div>
+      </div>
+      <span class="active-badge">✦ Featured</span>
+      <div class="movie-overlay">
+        <p class="movie-year">1997</p>
+        <h3 class="movie-title">Princess Mononoke</h3>
+        <div class="movie-stars">★★★★★</div>
+        <button class="watch-btn" onclick="watchMovie(event, 'Princess Mononoke')">Watch Film</button>
+      </div>
+    </div>
+
+    <!-- Card 4: My Neighbor Totoro -->
+    <div class="movie-card" data-movie="My Neighbor Totoro" onclick="handleMovieClick(this)">
+      <div class="poster-art poster-art-4">
+        <div class="poster-illustration pi-4"></div>
+      </div>
+      <span class="active-badge">✦ Featured</span>
+      <div class="movie-overlay">
+        <p class="movie-year">1988</p>
+        <h3 class="movie-title">My Neighbor Totoro</h3>
+        <div class="movie-stars">★★★★★</div>
+        <button class="watch-btn" onclick="watchMovie(event, 'My Neighbor Totoro')">Watch Film</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="movies-footer">
+    <hr class="footer-hr">
+    <div class="movies-footer-line">
+      <span class="footer-ornament">✦</span>
+      <p class="footer-text">Each film a world — each frame a painting.</p>
+      <span class="footer-ornament">✦</span>
+    </div>
+    <p class="copyright">© Studio Ghibli · All Rights Reserved · A Hayao Miyazaki Vision</p>
+  </div>
+</section>
+
+<!-- ─── SIGN UP MODAL ─── -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOnBackdrop(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <!-- Corner ornaments -->
+    <svg class="modal-corner modal-corner-tl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 55 Q5 5 55 5" stroke="#4a7c3f" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M5 45 Q5 15 45 5" stroke="#c9973a" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <circle cx="5" cy="5" r="4" fill="#c9973a"/>
+    </svg>
+    <svg class="modal-corner modal-corner-tr" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 55 Q5 5 55 5" stroke="#4a7c3f" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M5 45 Q5 15 45 5" stroke="#c9973a" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <circle cx="5" cy="5" r="4" fill="#c9973a"/>
+    </svg>
+
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+
+    <!-- Form state -->
+    <div id="formState">
+      <div class="modal-icon">🌿</div>
+      <h2 class="modal-title" id="modalTitle">Begin Your Journey</h2>
+      <p class="modal-subtitle">Join us in the world between worlds — where magic is just a doorstep away.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="firstName">First Name</label>
+          <input class="form-input" type="text" id="firstName" placeholder="Chihiro" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">Last Name</label>
+          <input class="form-input" type="text" id="lastName" placeholder="Ogino" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label" for="email">Email Address</label>
+          <input class="form-input" type="email" id="email" placeholder="spirit@ghibli.jp" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="modal-divider">✦</div>
+
+      <button class="signup-btn" onclick="handleSignup()">
+        ✦ Enter the Spirit World ✦
+      </button>
+      <p class="modal-note">No spam, ever. Just the magic of Ghibli.</p>
+    </div>
+
+    <!-- Success state -->
+    <div class="modal-success" id="successState">
+      <div class="success-anim">🌸</div>
+      <h3 class="success-title">Welcome, Traveler!</h3>
+      <p class="success-text">Your journey begins now.<br>The spirit world awaits you at your doorstep.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── NAVBAR SCROLL ───
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ─── TRAIN SCROLL ANIMATION ───
+const trainWrapper = document.getElementById('trainWrapper');
+let lastScrollY = 0;
+let trainX = 0;
+let targetX = 0;
+let ticking = false;
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const delta = scrollY - lastScrollY;
+  const homeH = document.getElementById('home').offsetHeight;
+  const progress = Math.min(scrollY / homeH, 1);
+
+  // Train moves right when scrolling down, left when up
+  targetX = progress * 55; // up to 55% translation
+  lastScrollY = scrollY;
+
+  if (!ticking) {
+    requestAnimationFrame(updateTrain);
+    ticking = true;
+  }
+});
+
+function updateTrain() {
+  trainX += (targetX - trainX) * 0.08;
+  trainWrapper.style.transform = `translateX(${trainX}%)`;
+  ticking = false;
+
+  // Keep animating if not settled
+  if (Math.abs(targetX - trainX) > 0.1) {
+    ticking = true;
+    requestAnimationFrame(updateTrain);
+  }
+}
+
+// ─── DUST PARTICLES ───
+function spawnDust() {
+  const container = document.getElementById('trainDust');
+  if (!container) return;
+  const dot = document.createElement('div');
+  dot.className = 'dust-mote';
+  const size = Math.random() * 5 + 2;
+  dot.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${Math.random() * 30 + 5}%;
+    bottom: ${Math.random() * 15 + 5}%;
+    animation-duration: ${Math.random() * 2 + 1.5}s;
+    animation-delay: ${Math.random() * 0.5}s;
+    opacity: 0;
+  `;
+  container.appendChild(dot);
+  setTimeout(() => dot.remove(), 3500);
+}
+setInterval(spawnDust, 400);
+
+// ─── MOVIE CARD CYCLING ───
+const cards = document.querySelectorAll('.movie-card');
+let activeIndex = 0;
+let cycleTimer;
+
+function setActive(index) {
+  cards.forEach(c => c.classList.remove('active'));
+  activeIndex = index % cards.length;
+  cards[activeIndex].classList.add('active');
+}
+
+function startCycle() {
+  cycleTimer = setInterval(() => {
+    setActive((activeIndex + 1) % cards.length);
+  }, 3000);
+}
+
+function stopCycle() {
+  clearInterval(cycleTimer);
+}
+
+startCycle();
+
+// Hover interaction
+cards.forEach((card, i) => {
+  card.addEventListener('mouseenter', () => {
+    stopCycle();
+    setActive(i);
+  });
+  card.addEventListener('mouseleave', () => {
+    startCycle();
+  });
+});
+
+function handleMovieClick(card) {
+  const idx = Array.from(cards).indexOf(card);
+  stopCycle();
+  setActive(idx);
+  setTimeout(startCycle, 4000);
+}
+
+// ─── WATCH MOVIE → open sign up ───
+function watchMovie(e, movieName) {
+  e.stopPropagation();
+  openModal(e);
+}
+
+// ─── MODAL ───
+function openModal(e) {
+  if (e) e.preventDefault();
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('formState').style.display = 'block';
+  document.getElementById('successState').style.display = 'none';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('firstName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOnBackdrop(e) {
+  if (e.target === document.getElementById('modalBackdrop')) closeModal();
+}
+
+function handleSignup() {
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  const em = document.getElementById('email').value.trim();
+
+  if (!fn || !ln || !em) {
+    // Shake empty inputs
+    [document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('email')].forEach(inp => {
+      if (!inp.value.trim()) {
+        inp.style.borderColor = '#b84c2c';
+        inp.style.animation = 'none';
+        setTimeout(() => {
+          inp.style.animation = 'shake 0.4s ease';
+          inp.style.borderColor = '';
+        }, 10);
+      }
+    });
+    return;
+  }
+
+  document.getElementById('formState').style.display = 'none';
+  document.getElementById('successState').style.display = 'block';
+
+  // Auto close after 3s
+  setTimeout(closeModal, 3000);
+}
+
+// Escape key closes modal
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Shake animation
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }`;
+document.head.appendChild(styleEl);
+</script>
+</body>
+</html>
